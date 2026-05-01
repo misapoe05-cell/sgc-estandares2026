@@ -1,0 +1,25 @@
+{
+  "name": "sgc-normas",
+  "version": "1.0.0",
+  "description": "App de estudio profundo de normas NMX-C de concreto y geotecnia",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Static files ready in www/'",
+    "cap:sync": "npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android",
+    "android:debug": "cd android && ./gradlew assembleDebug",
+    "android:release": "cd android && ./gradlew assembleRelease"
+  },
+  "author": "Misael",
+  "license": "Proprietary",
+  "dependencies": {
+    "@capacitor/android": "6.1.2",
+    "@capacitor/app": "6.0.1",
+    "@capacitor/core": "6.1.2",
+    "@capacitor/filesystem": "6.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "6.1.2"
+  }
+}

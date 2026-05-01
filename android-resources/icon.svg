@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A56DB"/>
+      <stop offset="100%" stop-color="#0F2A4A"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F0F4FA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo con bordes redondeados -->
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+
+  <!-- Documento principal -->
+  <g transform="translate(120,116)">
+    <!-- página de fondo -->
+    <rect x="20" y="30" width="232" height="280" rx="16" fill="#FFFFFF" opacity="0.25"/>
+    <!-- página principal -->
+    <rect x="0" y="0" width="232" height="280" rx="16" fill="url(#page)" stroke="#FFFFFF" stroke-width="2"/>
+
+    <!-- Encabezado de norma -->
+    <rect x="22" y="26" width="80" height="10" rx="2" fill="#1A56DB"/>
+    <rect x="22" y="44" width="120" height="14" rx="2" fill="#0F2A4A"/>
+
+    <!-- Líneas de texto -->
+    <rect x="22" y="80" width="188" height="6" rx="1" fill="#94A3B8"/>
+    <rect x="22" y="96" width="188" height="6" rx="1" fill="#94A3B8"/>
+    <rect x="22" y="112" width="140" height="6" rx="1" fill="#94A3B8"/>
+
+    <!-- Sección con check (calidad) -->
+    <rect x="22" y="140" width="188" height="50" rx="6" fill="#DBEAFE"/>
+    <circle cx="42" cy="165" r="11" fill="#16A34A"/>
+    <path d="M 36 165 L 41 170 L 48 161" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="62" y="158" width="130" height="6" rx="1" fill="#1E40AF"/>
+    <rect x="62" y="170" width="100" height="6" rx="1" fill="#3B82F6"/>
+
+    <rect x="22" y="206" width="188" height="6" rx="1" fill="#94A3B8"/>
+    <rect x="22" y="222" width="188" height="6" rx="1" fill="#94A3B8"/>
+    <rect x="22" y="238" width="120" height="6" rx="1" fill="#94A3B8"/>
+  </g>
+
+  <!-- Etiqueta "C" arriba a la derecha (Concreto) -->
+  <circle cx="384" cy="148" r="48" fill="#0D9488" stroke="#FFFFFF" stroke-width="6"/>
+  <text x="384" y="166" font-family="Arial Black, sans-serif" font-size="52" font-weight="900" fill="#FFFFFF" text-anchor="middle">C</text>
+</svg>
