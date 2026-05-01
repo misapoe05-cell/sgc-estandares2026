@@ -2,7 +2,7 @@
 // Stores: notes (por guía), bookmarks, progress, pdfs (blobs), settings
 const DB = (() => {
   const NAME = 'sgc_normas_db';
-  const VERSION = 1;
+  const VERSION = 2;
   let _db = null;
 
   function open() {
@@ -17,6 +17,7 @@ const DB = (() => {
         if (!db.objectStoreNames.contains('progress'))   db.createObjectStore('progress',  { keyPath: 'key' }); // key = `${guideId}:${partIdx}`
         if (!db.objectStoreNames.contains('pdfs'))       db.createObjectStore('pdfs',      { keyPath: 'guideId' });
         if (!db.objectStoreNames.contains('settings'))   db.createObjectStore('settings',  { keyPath: 'key' });
+        if (!db.objectStoreNames.contains('titles'))     db.createObjectStore('titles',    { keyPath: 'guideId' });
       };
       req.onsuccess = () => { _db = req.result; resolve(_db); };
     });
@@ -59,7 +60,7 @@ const DB = (() => {
       });
     },
     async clearAll() {
-      for (const s of ['notes','bookmarks','progress','pdfs','settings']) {
+      for (const s of ['notes','bookmarks','progress','pdfs','settings','titles']) {
         await this.clear(s);
       }
     },
@@ -129,6 +130,22 @@ const DB = (() => {
     },
     async deletePdf(guideId) {
       return this.delete('pdfs', guideId);
+    },
+
+    // Títulos personalizados (para reflejar actualizaciones de la norma)
+    async getCustomTitle(guideId) {
+      const r = await this.get('titles', guideId);
+      return r ? r : null;
+    },
+    async setCustomTitle(guideId, fields) {
+      // fields = { title?, code?, subtitle? }
+      return this.put('titles', { guideId, ...fields, updatedAt: Date.now() });
+    },
+    async resetCustomTitle(guideId) {
+      return this.delete('titles', guideId);
+    },
+    async listCustomTitles() {
+      return this.getAll('titles');
     }
   };
 })();

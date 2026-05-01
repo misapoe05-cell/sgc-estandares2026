@@ -1,6 +1,6 @@
-# SGC Normas — App Android para estudiar NMX-C
+# SGC Estándares — App Android para estudiar NMX-C
 
-App offline para estudiar las 13 normas mexicanas (NMX-C) de Concreto y Geotecnia.
+App offline para estudiar 13 estándares mexicanos (NMX-C) de Concreto y Geotecnia.
 Las guías de aprendizaje están integradas en la app y los PDFs oficiales se cargan
 manualmente para consulta dentro de la misma app.
 

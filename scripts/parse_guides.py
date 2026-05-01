@@ -253,6 +253,27 @@ for fn in sorted(os.listdir(GUIAS_DIR)):
     })
     print(f"  {nmx_id:18} -> {len(parts)} partes, {os.path.getsize(out_path):,} bytes")
 
+# Asignar categorías manualmente (basado en clasificación del usuario)
+CATEGORIAS = {
+    "NMX-C-083":   "Concreto",   "NMX-C-109-1": "Concreto",
+    "NMX-C-148":   "Concreto",   "NMX-C-156-1": "Concreto",
+    "NMX-C-159":   "Concreto",   "NMX-C-161-1": "Concreto",
+    "NMX-C-431-2": "Geotecnia",  "NMX-C-435":   "Concreto",
+    "NMX-C-467-1": "Geotecnia",  "NMX-C-468-1": "Geotecnia",
+    "NMX-C-475-1": "Geotecnia",  "NMX-C-476-1": "Geotecnia",
+    "NMX-C-511-1": "Geotecnia"
+}
+import re as _re
+for entry in manifest:
+    entry["category"] = CATEGORIAS.get(entry["id"], "Concreto")
+    # Cargar JSON individual para enriquecer
+    full = json.load(open(os.path.join(OUT_DIR, entry["file"]), encoding="utf-8"))
+    entry["code_full"] = full["metadata"]["code"]
+    intro = full["metadata"]["intro_callout"]
+    intro_clean = _re.sub(r"<[^>]+>", "", intro)
+    intro_clean = intro_clean.replace("Para quién es esta guía", "").strip()
+    entry["short_description"] = intro_clean.split(".")[0][:200] + "..."
+
 # Manifest global
 json.dump(manifest, open(os.path.join(OUT_DIR, "manifest.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=2)

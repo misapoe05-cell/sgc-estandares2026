@@ -40,13 +40,23 @@ const Render = {
 
   async guideHeader(guide) {
     const m = guide.metadata;
+    const customTitle = await DB.getCustomTitle(guide.slug);
+    const isEdited = !!customTitle;
     return `
       <div class="guide-header">
         ${m.subtitle ? `<div class="gh-subtitle">${m.subtitle}</div>` : ''}
         ${m.kind ? `<div class="gh-kind">${m.kind}</div>` : ''}
         ${m.code ? `<div class="gh-code">${m.code}</div>` : ''}
-        ${m.title ? `<div class="gh-title">${m.title}</div>` : ''}
-        ${m.category ? `<div class="gh-cat">${m.category}</div>` : ''}
+        ${m.title ? `<div class="gh-title-row">
+          <div class="gh-title">${m.title}</div>
+          <button class="gh-edit-btn" onclick="openEditTitleModal('${guide.slug}')" aria-label="Editar título">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+        </div>` : ''}
+        ${m.category ? `<div class="gh-cat">${m.category}${isEdited ? ' · <em style="color:var(--c-amber)">editado</em>' : ''}</div>` : ''}
         ${m.intro_callout ? `<div class="callout">${m.intro_callout}</div>` : ''}
       </div>
     `;

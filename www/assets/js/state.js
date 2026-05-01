@@ -11,6 +11,18 @@ const State = {
   async loadManifest() {
     const res = await fetch('assets/data/manifest.json');
     this.manifest = await res.json();
+    // Aplicar títulos personalizados si existen
+    const customs = await DB.listCustomTitles();
+    const byId = {};
+    for (const c of customs) byId[c.guideId] = c;
+    for (const m of this.manifest) {
+      const c = byId[m.slug];
+      if (c) {
+        if (c.title)    m.title    = c.title;
+        if (c.code)     m.id       = c.code;
+        if (c.subtitle) m.subtitle = c.subtitle;
+      }
+    }
     return this.manifest;
   },
 
@@ -18,8 +30,21 @@ const State = {
     if (this.guidesCache[slug]) return this.guidesCache[slug];
     const res = await fetch(`assets/data/${slug}.json`);
     const data = await res.json();
+    // Aplicar título personalizado si existe
+    const c = await DB.getCustomTitle(slug);
+    if (c) {
+      if (c.title)    data.metadata.title    = c.title;
+      if (c.code)     data.metadata.code     = c.code;
+      if (c.subtitle) data.metadata.subtitle = c.subtitle;
+    }
     this.guidesCache[slug] = data;
     return data;
+  },
+
+  // Volver a cargar una guía desde disco (saltarse caché)
+  async reloadGuide(slug) {
+    delete this.guidesCache[slug];
+    return this.loadGuide(slug);
   },
 
   findManifestEntry(idOrSlug) {

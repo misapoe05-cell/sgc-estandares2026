@@ -41,11 +41,11 @@ const Views = {
   _updateAppbar() {
     const v = State.currentView;
     const titles = {
-      home: 'SGC Normas',
+      home: 'SGC Estándares',
       search: 'Búsqueda global',
       progress: 'Mi progreso',
       settings: 'Ajustes',
-      map: 'Red de normas',
+      map: 'Red de estándares',
       exam: 'Modo examen'
     };
     const back = document.getElementById('btnBack');
@@ -66,7 +66,7 @@ const Views = {
         </svg>
       </button>`;
     } else {
-      title.textContent = titles[v] || 'SGC Normas';
+      title.textContent = titles[v] || 'SGC Estándares';
       back.hidden = true;
     }
   },
@@ -374,7 +374,7 @@ async function showNormConnections(slug) {
   const refs = State._normRefs[slug];
   let body = `<p class="meta">Referencias dentro de <strong>${m.id}</strong></p>`;
   if (refs.size === 0) {
-    body += '<p class="meta">Esta guía no menciona explícitamente otras NMX del catálogo.</p>';
+    body += '<p class="meta">Esta guía no menciona explícitamente otros estándares del catálogo.</p>';
   } else {
     body += '<div>';
     for (const refId of refs) {
@@ -393,4 +393,61 @@ async function showNormConnections(slug) {
   }
   body += `<button class="btn-block" style="margin-top:14px" onclick="State.hideModal();openGuide('${slug}')">Abrir ${m.id}</button>`;
   State.showModal(m.title, body);
+}
+
+// === Editar título de guía ===
+async function openEditTitleModal(slug) {
+  const guide = await State.loadGuide(slug);
+  const m = guide.metadata;
+  const custom = await DB.getCustomTitle(slug);
+  const isEdited = !!custom;
+
+  const body = `
+    <p class="meta">Edita el código, subtítulo o título si el estándar fue actualizado (cambio de año, revisión, etc.).</p>
+    <div class="edit-field">
+      <label>Código del estándar</label>
+      <input type="text" id="editCode" value="${escapeHtml(m.code || '')}" placeholder="NMX-C-XXX-ONNCCE-AAAA">
+    </div>
+    <div class="edit-field">
+      <label>Título</label>
+      <input type="text" id="editTitle" value="${escapeHtml(m.title || '')}" placeholder="Título del estándar">
+    </div>
+    <div class="edit-field">
+      <label>Subtítulo (opcional)</label>
+      <input type="text" id="editSubtitle" value="${escapeHtml(m.subtitle || '')}" placeholder="Guía NMX-C-XXX · Aprendizaje profundo">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn-block" style="margin:0" onclick="saveCustomTitle('${slug}')">Guardar cambios</button>
+    </div>
+    ${isEdited ? `<button class="btn-block danger" style="margin-top:8px" onclick="resetCustomTitle('${slug}')">Restablecer al original</button>` : ''}
+    <p class="meta" style="margin-top:10px;font-size:12px">Los cambios se guardan en este dispositivo. El contenido de la guía no cambia, solo el encabezado.</p>
+  `;
+  State.showModal('Editar encabezado', body);
+}
+
+async function saveCustomTitle(slug) {
+  const code = document.getElementById('editCode').value.trim();
+  const title = document.getElementById('editTitle').value.trim();
+  const subtitle = document.getElementById('editSubtitle').value.trim();
+  if (!title) {
+    State.toast('El título no puede estar vacío');
+    return;
+  }
+  await DB.setCustomTitle(slug, { code, title, subtitle });
+  // Limpiar caché y forzar recarga
+  await State.reloadGuide(slug);
+  // Recargar manifest también para que el home refleje los cambios
+  await State.loadManifest();
+  State.hideModal();
+  State.toast('✓ Encabezado actualizado');
+  Views.render();
+}
+
+async function resetCustomTitle(slug) {
+  await DB.resetCustomTitle(slug);
+  await State.reloadGuide(slug);
+  await State.loadManifest();
+  State.hideModal();
+  State.toast('Encabezado restablecido');
+  Views.render();
 }
