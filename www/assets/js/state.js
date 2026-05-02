@@ -18,9 +18,10 @@ const State = {
     for (const m of this.manifest) {
       const c = byId[m.slug];
       if (c) {
-        if (c.title)    m.title    = c.title;
-        if (c.code)     m.id       = c.code;
-        if (c.subtitle) m.subtitle = c.subtitle;
+        if (c.title)     m.title    = c.title;
+        if (c.shortCode) m.id       = c.shortCode;
+        if (c.subtitle)  m.subtitle = c.subtitle;
+        if (c.code)      m.code_full = c.code;
       }
     }
     return this.manifest;

@@ -1,6 +1,6 @@
 {
   "appId": "com.sgc.normas",
-  "appName": "SGC Normas",
+  "appName": "SGC Estándares",
   "webDir": "www",
   "android": {
     "buildOptions": {

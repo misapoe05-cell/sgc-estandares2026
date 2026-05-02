@@ -263,9 +263,20 @@ CATEGORIAS = {
     "NMX-C-475-1": "Geotecnia",  "NMX-C-476-1": "Geotecnia",
     "NMX-C-511-1": "Geotecnia"
 }
+
+# Orden ONNCCE (oficial del compendio)
+ORDER = [
+    "NMX-C-161-1", "NMX-C-156-1", "NMX-C-435", "NMX-C-159",
+    "NMX-C-148", "NMX-C-109-1", "NMX-C-083",
+    "NMX-C-431-2", "NMX-C-467-1", "NMX-C-468-1",
+    "NMX-C-475-1", "NMX-C-476-1", "NMX-C-511-1"
+]
+order_map = {nmx_id: i for i, nmx_id in enumerate(ORDER)}
+
 import re as _re
 for entry in manifest:
     entry["category"] = CATEGORIAS.get(entry["id"], "Concreto")
+    entry["order"] = order_map.get(entry["id"], 999)
     # Cargar JSON individual para enriquecer
     full = json.load(open(os.path.join(OUT_DIR, entry["file"]), encoding="utf-8"))
     entry["code_full"] = full["metadata"]["code"]
@@ -273,6 +284,9 @@ for entry in manifest:
     intro_clean = _re.sub(r"<[^>]+>", "", intro)
     intro_clean = intro_clean.replace("Para quién es esta guía", "").strip()
     entry["short_description"] = intro_clean.split(".")[0][:200] + "..."
+
+# Reordenar
+manifest.sort(key=lambda e: e["order"])
 
 # Manifest global
 json.dump(manifest, open(os.path.join(OUT_DIR, "manifest.json"), "w", encoding="utf-8"),

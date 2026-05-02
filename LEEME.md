@@ -12,7 +12,7 @@ manualmente para consulta dentro de la misma app.
 - 📄 **Carga manual de PDFs** — autodetecta a qué norma pertenece cada PDF
 - 🎯 **Modo práctica** — flashcards con la sección de autoevaluación de cada guía
 - 📝 **Modo examen** — preguntas aleatorias de las 13 guías con calificación
-- 🗺️ **Red de normas** — ve qué normas se referencian entre sí
+- 🗺️ **Red de estándares** — ve qué estándares se referencian entre sí
 - ⭐ **Marcadores y notas** privadas por guía
 - 📊 **Progreso de estudio** — qué partes has leído de cada guía
 - 🔍 **Búsqueda global** — busca dentro del contenido de las 13 guías

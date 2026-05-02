@@ -399,13 +399,20 @@ async function showNormConnections(slug) {
 async function openEditTitleModal(slug) {
   const guide = await State.loadGuide(slug);
   const m = guide.metadata;
+  const manifestEntry = State.findManifestEntry(slug);
   const custom = await DB.getCustomTitle(slug);
   const isEdited = !!custom;
+  // Código corto = el del manifest (NMX-C-083, NMX-C-156-1...)
+  const shortCode = manifestEntry ? manifestEntry.id : '';
 
   const body = `
-    <p class="meta">Edita el código, subtítulo o título si el estándar fue actualizado (cambio de año, revisión, etc.).</p>
+    <p class="meta">Edita los datos del estándar si fue actualizado (cambio de año, revisión, etc.).</p>
     <div class="edit-field">
-      <label>Código del estándar</label>
+      <label>Código corto (aparece en la lista y barra superior)</label>
+      <input type="text" id="editShortCode" value="${escapeHtml(shortCode)}" placeholder="NMX-C-083">
+    </div>
+    <div class="edit-field">
+      <label>Código completo del estándar</label>
       <input type="text" id="editCode" value="${escapeHtml(m.code || '')}" placeholder="NMX-C-XXX-ONNCCE-AAAA">
     </div>
     <div class="edit-field">
@@ -426,6 +433,7 @@ async function openEditTitleModal(slug) {
 }
 
 async function saveCustomTitle(slug) {
+  const shortCode = document.getElementById('editShortCode').value.trim();
   const code = document.getElementById('editCode').value.trim();
   const title = document.getElementById('editTitle').value.trim();
   const subtitle = document.getElementById('editSubtitle').value.trim();
@@ -433,10 +441,13 @@ async function saveCustomTitle(slug) {
     State.toast('El título no puede estar vacío');
     return;
   }
-  await DB.setCustomTitle(slug, { code, title, subtitle });
+  if (!shortCode) {
+    State.toast('El código corto no puede estar vacío');
+    return;
+  }
+  await DB.setCustomTitle(slug, { shortCode, code, title, subtitle });
   // Limpiar caché y forzar recarga
   await State.reloadGuide(slug);
-  // Recargar manifest también para que el home refleje los cambios
   await State.loadManifest();
   State.hideModal();
   State.toast('✓ Encabezado actualizado');
