@@ -124,6 +124,7 @@
       <nav class="guide-tabs" id="guideTabs">
         <button data-tab="study" class="active"><span>📖</span> Estudiar</button>
         <button data-tab="pdf"><span>📄</span> Estándar</button>
+        <button data-tab="proc"><span>📋</span> Procedimiento</button>
         <button data-tab="practice"><span>🎯</span> Práctica</button>
         <button data-tab="notes"><span>📌</span> Notas</button>
         <button data-tab="bookmarks"><span>⭐</span> Marcadores</button>
@@ -191,12 +192,15 @@
 
 <!-- Input de archivo PDF (oculto) -->
 <input type="file" id="pdfFileInput" accept="application/pdf" hidden>
+<!-- Input de archivo Procedimiento (PDF/Word/Excel) -->
+<input type="file" id="procFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
 
 <script src="assets/js/db.js"></script>
 <script src="assets/js/state.js"></script>
 <script src="assets/js/render.js"></script>
 <script src="assets/js/views.js"></script>
 <script src="assets/js/pdf.js"></script>
+<script src="assets/js/procedure.js"></script>
 <script src="assets/js/practice.js"></script>
 <script src="assets/js/app.js"></script>
 </body>

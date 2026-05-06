@@ -78,6 +78,8 @@ const Views = {
     const list = document.getElementById('guideList');
     const pdfs = await DB.listPdfs();
     const pdfSet = new Set(pdfs.map(p => p.guideId));
+    const procs = await DB.listProcedures();
+    const procSet = new Set(procs.map(p => p.guideId));
     const progressList = await DB.listProgress();
     const progressByGuide = {};
     for (const p of progressList) {
@@ -101,6 +103,7 @@ const Views = {
 
     list.innerHTML = entries.map(e => {
       const hasPdf = pdfSet.has(e.slug);
+      const hasProc = procSet.has(e.slug);
       const readCount = progressByGuide[e.slug] || 0;
       const pct = Math.min(100, Math.round((readCount / e.parts_count) * 100));
       return `
@@ -112,7 +115,9 @@ const Views = {
           <div class="guide-title">${e.title}</div>
           <div class="guide-meta">
             <span>${e.parts_count} partes</span>
-            <span class="guide-badge ${hasPdf?'has-pdf':''}">${hasPdf ? '📄 PDF cargado' : '📄 Sin PDF'}</span>
+            ${hasPdf ? '<span class="guide-badge has-pdf">📄 Estándar</span>' : ''}
+            ${hasProc ? '<span class="guide-badge has-proc">📋 Procedimiento</span>' : ''}
+            ${!hasPdf && !hasProc ? '<span class="guide-badge">Sin documentos</span>' : ''}
           </div>
           ${pct > 0 ? `<div class="guide-progress"><div class="guide-progress-bar" style="width:${pct}%"></div></div>` : ''}
         </div>
@@ -246,6 +251,8 @@ const Views = {
       }
     } else if (tab === 'pdf') {
       await PdfModule.render(slug, c);
+    } else if (tab === 'proc') {
+      await ProcModule.render(slug, c);
     } else if (tab === 'practice') {
       await Practice.render(slug, c);
     } else if (tab === 'notes') {

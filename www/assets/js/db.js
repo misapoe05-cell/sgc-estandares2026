@@ -2,7 +2,7 @@
 // Stores: notes (por guía), bookmarks, progress, pdfs (blobs), settings
 const DB = (() => {
   const NAME = 'sgc_normas_db';
-  const VERSION = 2;
+  const VERSION = 3;
   let _db = null;
 
   function open() {
@@ -18,6 +18,7 @@ const DB = (() => {
         if (!db.objectStoreNames.contains('pdfs'))       db.createObjectStore('pdfs',      { keyPath: 'guideId' });
         if (!db.objectStoreNames.contains('settings'))   db.createObjectStore('settings',  { keyPath: 'key' });
         if (!db.objectStoreNames.contains('titles'))     db.createObjectStore('titles',    { keyPath: 'guideId' });
+        if (!db.objectStoreNames.contains('procedures')) db.createObjectStore('procedures',{ keyPath: 'guideId' });
       };
       req.onsuccess = () => { _db = req.result; resolve(_db); };
     });
@@ -60,7 +61,7 @@ const DB = (() => {
       });
     },
     async clearAll() {
-      for (const s of ['notes','bookmarks','progress','pdfs','settings','titles']) {
+      for (const s of ['notes','bookmarks','progress','pdfs','settings','titles','procedures']) {
         await this.clear(s);
       }
     },
@@ -146,6 +147,25 @@ const DB = (() => {
     },
     async listCustomTitles() {
       return this.getAll('titles');
+    },
+
+    // Procedimientos internos (PDF/Word/Excel)
+    async saveProcedure(guideId, blob, originalName, mimeType) {
+      const buf = await blob.arrayBuffer();
+      return this.put('procedures', {
+        guideId, buffer: buf, name: originalName,
+        mimeType: mimeType || blob.type || 'application/octet-stream',
+        size: blob.size, savedAt: Date.now()
+      });
+    },
+    async getProcedure(guideId) {
+      return this.get('procedures', guideId);
+    },
+    async listProcedures() {
+      return this.getAll('procedures');
+    },
+    async deleteProcedure(guideId) {
+      return this.delete('procedures', guideId);
     }
   };
 })();

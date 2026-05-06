@@ -148,6 +148,8 @@ html,body{height:100%;background:var(--c-bg);color:var(--c-text);font-size:var(-
   font-size:11px;font-weight:500;background:var(--c-surface-2)}
 .guide-badge.has-pdf{background:#DCFCE7;color:#166534}
 [data-theme="dark"] .guide-badge.has-pdf{background:#0E3D22;color:#86EFAC}
+.guide-badge.has-proc{background:#FEF3C7;color:#92400E}
+[data-theme="dark"] .guide-badge.has-proc{background:#3D2C0E;color:#FCD34D}
 .guide-progress{height:4px;background:var(--c-surface-2);border-radius:2px;overflow:hidden;margin-top:4px}
 .guide-progress-bar{height:100%;background:var(--c-primary);transition:width .3s ease}
 
@@ -201,8 +203,8 @@ html,body{height:100%;background:var(--c-bg);color:var(--c-text);font-size:var(-
   overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 .guide-tabs::-webkit-scrollbar{display:none}
 .guide-tabs button{flex:1;min-width:max-content;border:none;background:transparent;color:var(--c-text-3);
-  padding:12px 14px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;
-  white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:6px;justify-content:center}
+  padding:11px 12px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:5px;justify-content:center}
 .guide-tabs button span{font-size:14px}
 .guide-tabs button.active{color:var(--c-primary);border-bottom-color:var(--c-primary);font-weight:600}
 .guide-tab-content{padding:0;animation:fadeIn .2s ease}
@@ -314,6 +316,8 @@ html,body{height:100%;background:var(--c-bg);color:var(--c-text);font-size:var(-
 .pdf-saved .pdf-icon-big{font-size:64px;margin-bottom:14px;opacity:.85}
 .pdf-saved h3{font-size:18px;font-weight:700;color:var(--c-text);margin-bottom:6px;
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.3px}
+.pdf-saved .proc-type-tag{font-size:10px;font-weight:700;color:var(--c-amber);
+  letter-spacing:1.5px;margin-bottom:8px}
 .pdf-saved .pdf-filename{font-size:13px;color:var(--c-text-2);margin-bottom:8px;
   word-break:break-all;line-height:1.4}
 .pdf-saved .pdf-meta-row{display:flex;align-items:center;justify-content:center;gap:8px;

@@ -104,6 +104,11 @@
     e.target.value = '';
     if (f) handlePdfUpload(f);
   });
+  document.getElementById('procFileInput').addEventListener('change', e => {
+    const f = e.target.files[0];
+    e.target.value = '';
+    if (f) handleProcUpload(f);
+  });
 
   // === Modal ===
   document.getElementById('modalClose').addEventListener('click', () => State.hideModal());
@@ -156,19 +161,20 @@ function debounce(fn, ms) {
 // === Export / Import ===
 async function exportData() {
   const data = {
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     notes:     await DB.getAll('notes'),
     bookmarks: await DB.getAll('bookmarks'),
     progress:  await DB.getAll('progress'),
-    settings:  await DB.getAll('settings')
-    // PDFs no se exportan (son grandes)
+    settings:  await DB.getAll('settings'),
+    titles:    await DB.getAll('titles')
+    // PDFs y procedimientos no se exportan (son grandes)
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `sgc-normas-respaldo-${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `sgc-estandares-respaldo-${new Date().toISOString().split('T')[0]}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   State.toast('✓ Respaldo descargado');
@@ -187,18 +193,19 @@ async function importData(e) {
 
     if (data.notes)     for (const n of data.notes)     await DB.put('notes', n);
     if (data.bookmarks) for (const b of data.bookmarks) {
-      // Re-insertar como nuevos para no chocar IDs
       delete b.id;
       await DB.put('bookmarks', b);
     }
     if (data.progress)  for (const p of data.progress)  await DB.put('progress', p);
     if (data.settings)  for (const s of data.settings)  await DB.put('settings', s);
+    if (data.titles)    for (const t of data.titles)    await DB.put('titles', t);
 
-    // Re-aplicar settings
+    // Re-aplicar settings y manifest
     const theme = await DB.getSetting('theme', 'light');
     applyTheme(theme);
     const fs = await DB.getSetting('fontSize', 'md');
     applyFontSize(fs);
+    await State.loadManifest();
 
     State.toast('✓ Respaldo importado');
     Views.render();
